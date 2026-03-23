@@ -87,7 +87,6 @@
         .opened .wax-seal { opacity: 0; transform: translateX(-50%) translateY(-40px) scale(0.8); }
         .opened .card-container { transform: translateY(-200px) scale(1.05); z-index: 10; opacity: 1; pointer-events: auto; }
         .opened .envelope-wrapper { margin-top: 150px; }
-        .opened #music-control { opacity: 1; pointer-events: auto; }
 
         .card-container {
             position: absolute;
@@ -113,29 +112,29 @@
         .top-left { top: -10px; left: -10px; }
         .bottom-right { bottom: -10px; right: -10px; transform: rotate(180deg); }
 
-        /* Botão de Música */
+        /* Botão de Música Fixo e Sempre Visível */
         #music-control {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 100;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 1s 1.5s ease;
+            bottom: 25px;
+            right: 25px;
+            z-index: 9999; /* Garantir que fique acima de tudo */
         }
         .music-btn {
             background: #bfa37e;
             color: white;
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            border: 2px solid #fff;
             cursor: pointer;
+            transition: transform 0.3s ease;
         }
+        .music-btn:active { transform: scale(0.9); }
+        
         .music-pulse {
             animation: pulse-music 2s infinite;
         }
@@ -148,13 +147,13 @@
 </head>
 <body>
 
-    <!-- Controle de Áudio Oculto - Canção da América -->
-    <audio id="bgMusic" loop>
+    <!-- Controle de Áudio - Canção da América (Versão Instrumental Suave) -->
+    <audio id="bgMusic" loop preload="auto">
         <source src="https://www.bensound.com/bensound-music/bensound-memories.mp3" type="audio/mpeg">
         Seu navegador não suporta áudio.
     </audio>
 
-    <!-- Botão Flutuante de Música -->
+    <!-- Botão Flutuante de Música - Agora sempre visível para interação -->
     <div id="music-control">
         <button onclick="toggleMusic()" id="musicBtn" class="music-btn music-pulse">
             <svg id="playIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -270,11 +269,12 @@
             document.getElementById('envelope-click').onclick = null;
             document.getElementById('envelope-click').style.cursor = 'default';
             
-            // Tenta iniciar a música quando abrir o convite
+            // Forçar o play quando o usuário clica para abrir o envelope
+            // Isso geralmente satisfaz a exigência de "interação do usuário" do navegador
             audio.play().then(() => {
                 updateMusicUI(true);
-            }).catch(() => {
-                console.log("Reprodução automática bloqueada pelo navegador.");
+            }).catch((error) => {
+                console.log("Play automático ainda bloqueado, o usuário pode clicar no botão dourado.");
             });
         }
 
@@ -300,6 +300,7 @@
             }
         }
 
+        // Contador Regressivo
         const targetDate = new Date("May 30, 2026 17:30:00").getTime();
         function updateCountdown() {
             const now = new Date().getTime();
