@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convite Especial - Padrinhos</title>
+    <!-- Meta tags para visualização no WhatsApp -->
+    <meta property="og:title" content="Um convite especial para você! ✉️">
+    <meta property="og:description" content="Patrícia & Wesley solicitaram sua presença como Padrinho.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #1a1510;
+            background-image: url('https://www.transparenttextures.com/patterns/dark-leather.png');
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .font-cursive { font-family: 'Great Vibes', cursive; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-imperial { font-family: 'Cinzel', serif; }
+        .gold-text { color: #bfa37e; }
+        
+        .envelope-wrapper {
+            perspective: 1500px;
+            transition: all 1s ease-in-out;
+            margin: 100px auto;
+        }
+        .envelope {
+            position: relative;
+            width: 340px;
+            height: 240px;
+            background: #d4bc96;
+            background-image: url('https://www.transparenttextures.com/patterns/parchment.png');
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+            cursor: pointer;
+            border: 1px solid #b89c72;
+        }
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            width: 0;
+            height: 0;
+            border-left: 170px solid transparent;
+            border-right: 170px solid transparent;
+            border-top: 130px solid #c4ab85;
+            z-index: 3;
+            transform-origin: top;
+            transition: transform 0.8s 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2));
+        }
+        .envelope-front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #d4bc96;
+            background-image: url('https://www.transparenttextures.com/patterns/parchment.png');
+            clip-path: polygon(0 40%, 50% 100%, 100% 40%, 100% 100%, 0 100%);
+            z-index: 4;
+        }
+
+        .wax-seal {
+            position: absolute;
+            top: 110px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 65px;
+            height: 65px;
+            background: radial-gradient(circle at 30% 30%, #a31d1d, #7a1212);
+            border-radius: 50%;
+            z-index: 15;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d4bc96;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5), inset 0 0 15px rgba(0,0,0,0.4);
+            transition: all 0.5s ease;
+            border: 2px solid #8b1515;
+        }
+
+        .opened .envelope-flap { transform: rotateX(180deg); z-index: 1; }
+        .opened .wax-seal { opacity: 0; transform: translateX(-50%) translateY(-40px) scale(0.8); }
+        .opened .card-container { transform: translateY(-200px) scale(1.05); z-index: 10; opacity: 1; pointer-events: auto; }
+        .opened .envelope-wrapper { margin-top: 150px; }
+        .opened #music-control { opacity: 1; pointer-events: auto; }
+
+        .card-container {
+            position: absolute;
+            top: 15px;
+            left: 0;
+            width: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 1s 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .bg-floral {
+            background-color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        .floral-corner {
+            position: absolute;
+            width: 120px;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        .top-left { top: -10px; left: -10px; }
+        .bottom-right { bottom: -10px; right: -10px; transform: rotate(180deg); }
+
+        /* Botão de Música */
+        #music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s 1.5s ease;
+        }
+        .music-btn {
+            background: #bfa37e;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border: none;
+            cursor: pointer;
+        }
+        .music-pulse {
+            animation: pulse-music 2s infinite;
+        }
+        @keyframes pulse-music {
+            0% { box-shadow: 0 0 0 0 rgba(191, 163, 126, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(191, 163, 126, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(191, 163, 126, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Controle de Áudio Oculto - Canção da América -->
+    <audio id="bgMusic" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-memories.mp3" type="audio/mpeg">
+        Seu navegador não suporta áudio.
+    </audio>
+
+    <!-- Botão Flutuante de Música -->
+    <div id="music-control">
+        <button onclick="toggleMusic()" id="musicBtn" class="music-btn music-pulse">
+            <svg id="playIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+            </svg>
+            <svg id="pauseIcon" style="display:none" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        </button>
+    </div>
+
+    <div id="main-wrapper" class="envelope-wrapper">
+        <div id="envelope-click" class="envelope" onclick="openEnvelope()">
+            <div class="envelope-flap"></div>
+            <div class="envelope-front"></div>
+            
+            <div class="wax-seal font-imperial text-2xl font-bold">
+                <span class="drop-shadow-[0_2px_2px_rgba(0,0,0,0.5)]">P&W</span>
+            </div>
+
+            <div class="absolute inset-0 flex flex-col items-center justify-end pb-8 z-10">
+                <p class="font-imperial text-[9px] uppercase tracking-[0.3em] text-[#5c4a33] mb-2 font-bold">Documento Imperial</p>
+                <button class="font-serif italic text-[#7a1212] text-xs px-4 py-1 animate-bounce uppercase tracking-widest">Toque para abrir</button>
+            </div>
+
+            <div class="card-container px-2">
+                <div id="convite" class="bg-floral max-w-lg w-full shadow-2xl rounded-lg p-6 md:p-10 border border-stone-200 relative mx-auto">
+                    
+                    <svg class="floral-corner top-left" viewBox="0 0 200 200">
+                        <path fill="#bfa37e" d="M40,0 Q60,40 100,40 Q140,40 160,0 L200,0 L200,200 L0,200 L0,0 Z" opacity="0.1"/>
+                    </svg>
+
+                    <div class="text-center relative z-10">
+                        <h2 class="gold-text font-serif italic text-sm tracking-widest mb-1 uppercase">Convite Especial</h2>
+                        <h1 class="font-cursive text-5xl text-stone-800 mb-4">Aos nossos Padrinhos</h1>
+                        
+                        <div class="w-12 h-px bg-stone-300 mx-auto mb-6"></div>
+
+                        <p class="text-stone-600 text-sm leading-relaxed mb-6 italic px-4">
+                            "Amigo é coisa para se guardar debaixo de sete chaves, dentro do coração..."
+                        </p>
+
+                        <div class="space-y-4 mb-8">
+                            <div>
+                                <p class="text-stone-400 text-[10px] uppercase tracking-[0.2em] mb-1">A Cerimônia</p>
+                                <p class="font-serif text-xl text-stone-800">30 de Maio de 2026</p>
+                                <p class="text-stone-700 font-medium text-sm">Às 17:30 Horas</p>
+                            </div>
+
+                            <div class="flex justify-center items-center">
+                                <div class="h-px bg-stone-200 w-8"></div>
+                                <span class="px-3 gold-text font-serif text-lg">♥</span>
+                                <div class="h-px bg-stone-200 w-8"></div>
+                            </div>
+
+                            <div>
+                                <p class="text-stone-400 text-[10px] uppercase tracking-[0.2em] mb-1">Local</p>
+                                <p class="font-serif text-lg text-stone-800 leading-tight">Igreja Matriz de Santo Antônio</p>
+                                <p class="text-stone-600 text-sm">Igarapé - MG</p>
+                                
+                                <a href="https://www.google.com/maps/search/?api=1&query=Igreja+Matriz+de+Santo+Antonio+Igarape+MG" target="_blank" class="inline-flex items-center mt-4 bg-white text-[#bfa37e] border border-[#bfa37e] px-4 py-1.5 rounded-full text-xs hover:bg-[#bfa37e] hover:text-white transition-all no-print">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    </svg>
+                                    Ver Localização
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-stone-100 pt-6 mb-6">
+                            <p class="text-stone-500 text-sm mb-4">Aceitam ser nossos Padrinhos?</p>
+                            <div class="flex justify-center">
+                                <button onclick="alert('Ficamos imensamente felizes com o seu SIM! ♥')" class="bg-[#bfa37e] text-white px-8 py-2 rounded shadow-lg hover:bg-[#a68d6a] transition text-sm no-print uppercase tracking-widest font-medium">
+                                    Com Certeza!
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-center space-x-4 mb-4 opacity-70 scale-90">
+                            <div class="text-center">
+                                <span id="days" class="block text-xl font-serif text-stone-800">00</span>
+                                <span class="text-[9px] uppercase text-stone-400">Dias</span>
+                            </div>
+                            <div class="text-center">
+                                <span id="hours" class="block text-xl font-serif text-stone-800">00</span>
+                                <span class="text-[9px] uppercase text-stone-400">Horas</span>
+                            </div>
+                            <div class="text-center">
+                                <span id="minutes" class="block text-xl font-serif text-stone-800">00</span>
+                                <span class="text-[9px] uppercase text-stone-400">Minutos</span>
+                            </div>
+                        </div>
+
+                        <h3 class="font-cursive text-4xl text-stone-700 mt-4">Patrícia & Wesley</h3>
+                    </div>
+
+                    <svg class="floral-corner bottom-right" viewBox="0 0 200 200">
+                        <path fill="#bfa37e" d="M40,0 Q60,40 100,40 Q140,40 160,0 L200,0 L200,200 L0,200 L0,0 Z" opacity="0.1"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const audio = document.getElementById("bgMusic");
+        const playIcon = document.getElementById("playIcon");
+        const pauseIcon = document.getElementById("pauseIcon");
+        const musicBtn = document.getElementById("musicBtn");
+
+        function openEnvelope() {
+            document.getElementById('main-wrapper').classList.add('opened');
+            document.getElementById('envelope-click').onclick = null;
+            document.getElementById('envelope-click').style.cursor = 'default';
+            
+            // Tenta iniciar a música quando abrir o convite
+            audio.play().then(() => {
+                updateMusicUI(true);
+            }).catch(() => {
+                console.log("Reprodução automática bloqueada pelo navegador.");
+            });
+        }
+
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+                updateMusicUI(true);
+            } else {
+                audio.pause();
+                updateMusicUI(false);
+            }
+        }
+
+        function updateMusicUI(isPlaying) {
+            if (isPlaying) {
+                playIcon.style.display = "none";
+                pauseIcon.style.display = "block";
+                musicBtn.classList.add("music-pulse");
+            } else {
+                playIcon.style.display = "block";
+                pauseIcon.style.display = "none";
+                musicBtn.classList.remove("music-pulse");
+            }
+        }
+
+        const targetDate = new Date("May 30, 2026 17:30:00").getTime();
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+
+            if (document.getElementById("days")) {
+                document.getElementById("days").innerText = days.toString().padStart(2, '0');
+                document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
+                document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
+            }
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>
